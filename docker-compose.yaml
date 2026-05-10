@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: flashcards_postgres
+
+    restart: always
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: flashcards
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./server
+
+    container_name: flashcards_backend
+
+    restart: always
+
+    ports:
+      - "5050:5050"
+
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/flashcards
+      PORT: 5050
+      NODE_ENV: development
+
+    depends_on:
+      - postgres
+
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  frontend:
+    build: ./client
+
+    container_name: flashcards_frontend
+
+    restart: always
+
+    ports:
+      - "5173:5173"
+
+    environment:
+      VITE_API_URL: http://localhost:5050/api
+
+    depends_on:
+      - backend
+
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
