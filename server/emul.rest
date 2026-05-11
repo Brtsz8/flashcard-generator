@@ -1,0 +1,58 @@
+### Health Check
+GET http://localhost:5050
+
+
+#################################################
+################ REGISTER #######################
+#################################################
+
+### Register valid user
+POST http://localhost:5050/api/auth/register
+Content-Type: application/json
+
+{
+  "email" : "test3@test.com",
+  "username": "Test3",
+  "password": "Password123"
+}
+
+#################################################
+################ LOGIN ##########################
+#################################################
+
+### Login valid
+POST http://localhost:5050/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test2@test.com",
+  "password": "Password123"
+}
+
+
+### ME test ###
+GET http://localhost:5050/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDE1MXlrMzAwMDB2cHV5bWc0djNweWoiLCJpYXQiOjE3Nzg1MDAxMjQsImV4cCI6MTc3ODU4NjUyNH0.RiCiZ8XAUIrpGrlUhO8SXK6stsf7RcFx2EITg3h1ZyM
+
+###
+POST http://localhost:5050/api/decks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3OTAwMDA3dml1ODgydW84M2kiLCJpYXQiOjE3Nzg1MDUyNDAsImV4cCI6MTc3ODU5MTY0MH0.SXJS4fViTM8ag_91YspexPmb7KgsaEVYL_ygQnoQ7ks
+
+{
+  "title": "Biology",
+  "description": "Biology deck"
+}
+
+###
+POST http://localhost:5050/api/decks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+{
+  "title": "Biology 2",
+  "description": "Biology deck v2"
+}
+
+GET http://localhost:5050/api/decks
+Authorization: Bearer 
