@@ -58,3 +58,37 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3O
 ###
 GET http://localhost:5050/api/decks
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3OTAwMDA3dml1ODgydW84M2kiLCJpYXQiOjE3Nzg1MDUyNDAsImV4cCI6MTc3ODU5MTY0MH0.SXJS4fViTM8ag_91YspexPmb7KgsaEVYL_ygQnoQ7ks
+
+#################################################
+################ FLASHCARDS #####################
+#################################################
+
+### Create flashcard
+POST http://localhost:5050/api/flashcards
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3OTAwMDA3dml1ODgydW84M2kiLCJpYXQiOjE3Nzg1MDUyNDAsImV4cCI6MTc3ODU5MTY0MH0.SXJS4fViTM8ag_91YspexPmb7KgsaEVYL_ygQnoQ7ks
+
+{
+  "question": "What is DNA?",
+  "answer": "Genetic material",
+  "deckId": "cmp18irns0003yvl77v7aiy0j"
+}
+
+###
+
+### Create second flashcard
+POST http://localhost:5050/api/flashcards
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3OTAwMDA3dml1ODgydW84M2kiLCJpYXQiOjE3Nzg1MDUyNDAsImV4cCI6MTc3ODU5MTY0MH0.SXJS4fViTM8ag_91YspexPmb7KgsaEVYL_ygQnoQ7ks
+
+{
+  "question": "What is RNA?",
+  "answer": "Messenger molecule",
+  "deckId": "cmp18irns0003yvl77v7aiy0j"
+}
+
+###
+
+### Get flashcards for deck
+GET http://localhost:5050/api/flashcards/cmp18irns0003yvl77v7aiy0j
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3OTAwMDA3dml1ODgydW84M2kiLCJpYXQiOjE3Nzg1MDUyNDAsImV4cCI6MTc3ODU5MTY0MH0.SXJS4fViTM8ag_91YspexPmb7KgsaEVYL_ygQnoQ7ks

@@ -9,11 +9,10 @@ const PORT = 5050
 app.use(express.json())
 app.use(express.static(path.join(__dirname, '../public')))
 app.use("/api", routes)
-// app.get('/', (req, res) => {
-//   const users = await prisma.user.findMany()
-//   //res.sendFile(path.join(__dirname, '../public/index.html'))
-//   res.json(users)
-// })
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'))
+})
 
 app.get("/users", async (req, res) => {
   try {
