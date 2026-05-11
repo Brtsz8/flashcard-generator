@@ -47,12 +47,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3O
 ###
 POST http://localhost:5050/api/decks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3OTAwMDA3dml1ODgydW84M2kiLCJpYXQiOjE3Nzg1MDUyNDAsImV4cCI6MTc3ODU5MTY0MH0.SXJS4fViTM8ag_91YspexPmb7KgsaEVYL_ygQnoQ7ks
 
 {
   "title": "Biology 2",
   "description": "Biology deck v2"
 }
 
+
+###
 GET http://localhost:5050/api/decks
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3OTAwMDA3dml1ODgydW84M2kiLCJpYXQiOjE3Nzg1MDUyNDAsImV4cCI6MTc3ODU5MTY0MH0.SXJS4fViTM8ag_91YspexPmb7KgsaEVYL_ygQnoQ7ks
