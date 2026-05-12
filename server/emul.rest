@@ -25,23 +25,23 @@ POST http://localhost:5050/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "test2@test.com",
+  "email": "test3@test.com",
   "password": "Password123"
 }
 
 
 ### ME test ###
 GET http://localhost:5050/api/auth/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDE1MXlrMzAwMDB2cHV5bWc0djNweWoiLCJpYXQiOjE3Nzg1MDAxMjQsImV4cCI6MTc3ODU4NjUyNH0.RiCiZ8XAUIrpGrlUhO8SXK6stsf7RcFx2EITg3h1ZyM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDJ0cXF3dzAwMDBsZDRyang1dzUyYnciLCJpYXQiOjE3Nzg2MDIwNzgsImV4cCI6MTc3ODY4ODQ3OH0.xfBCymK3OJ2W80tbnOD5YYqF_pko2c832c5HLtXYgFk
 
 ###
 POST http://localhost:5050/api/decks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3OTAwMDA3dml1ODgydW84M2kiLCJpYXQiOjE3Nzg1MDUyNDAsImV4cCI6MTc3ODU5MTY0MH0.SXJS4fViTM8ag_91YspexPmb7KgsaEVYL_ygQnoQ7ks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDJ0cXF3dzAwMDBsZDRyang1dzUyYnciLCJpYXQiOjE3Nzg2MDIwNzgsImV4cCI6MTc3ODY4ODQ3OH0.xfBCymK3OJ2W80tbnOD5YYqF_pko2c832c5HLtXYgFk
 
 {
-  "title": "Biology",
-  "description": "Biology deck"
+  "title": "Math",
+  "description": "Math deck"
 }
 
 ###
@@ -90,5 +90,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3O
 ###
 
 ### Get flashcards for deck
-GET http://localhost:5050/api/flashcards/cmp18irns0003yvl77v7aiy0j
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDEzNjR3OTAwMDA3dml1ODgydW84M2kiLCJpYXQiOjE3Nzg1MDUyNDAsImV4cCI6MTc3ODU5MTY0MH0.SXJS4fViTM8ag_91YspexPmb7KgsaEVYL_ygQnoQ7ks
+GET http://localhost:5050/api/flashcards/cmp2tshe50002ld4r3gl0u1ld
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDJ0cXF3dzAwMDBsZDRyang1dzUyYnciLCJpYXQiOjE3Nzg2MDIwNzgsImV4cCI6MTc3ODY4ODQ3OH0.xfBCymK3OJ2W80tbnOD5YYqF_pko2c832c5HLtXYgFk
+
+###
+POST http://localhost:5050/api/ai/generate
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcDJ0cXF3dzAwMDBsZDRyang1dzUyYnciLCJpYXQiOjE3Nzg2MDIwNzgsImV4cCI6MTc3ODY4ODQ3OH0.xfBCymK3OJ2W80tbnOD5YYqF_pko2c832c5HLtXYgFk
+
+{
+  "prompt": "Basics of biology and DNA",
+  "deckId": "cmp2tshe50002ld4r3gl0u1ld"
+}
