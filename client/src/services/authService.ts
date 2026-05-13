@@ -1,6 +1,6 @@
 import api from "../api/axios"
 
-export const login = async (
+export const loginUser = async (
     email: string,
     password: string
 ) => {
@@ -15,7 +15,7 @@ export const login = async (
     return response.data
 }
 
-export const register = async (
+export const registerUser = async (
     username: string,
     email: string,
     password: string,
