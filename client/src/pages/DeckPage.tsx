@@ -28,6 +28,11 @@ export default function DeckPage() {
     const [prompt, setPrompt] = useState("")
     const [generating, setGenerating] = useState(false)
 
+    //editing flashcard
+    const [editingId, setEditingId] = useState<string | null>(null)
+    const [editQuestion, setEditQuestion] = useState("")
+    const [editAnswer, setEditAnswer] = useState("")
+
     //fetch flashcards
     useEffect(() => {
         const fetchFlashcards = async () => {
@@ -106,16 +111,37 @@ export default function DeckPage() {
         flashcardId: string
     ) => {
         try{
+            await deleteFlashcard(flashcardId)
 
-        }catch(err){
+            setFlashcards((prev) =>
+                prev.filter((card) => card.id !== flashcardId)
+            )
+        }
+        catch(err){
             console.error(err)
         }
     }
+
     //handle update of a flashcard
     const handleUpdate = async (
         flashcardId: string
     ) => {
         try{
+            const update = await updateFlashcard(
+                flashcardId,
+                editQuestion,
+                editAnswer
+            )
+
+            setFlashcards((prev) => 
+                prev.map((card) =>
+                   card.id === flashcardId
+                    ? update
+                    : card 
+                )
+            )
+
+            setEditingId(null)
 
         }catch(err){
             console.error(err)
@@ -194,9 +220,58 @@ export default function DeckPage() {
                             padding: "1rem",
                             marginBottom: "1rem"
                         }}
-                    >
-                        <h3>{flashcard.question}</h3>
-                        <p>{flashcard.answer}</p>
+                    >  
+                    {
+                        editingId === flashcard.id ? (
+                            <div>
+                                <input
+                                    type="text"
+                                    value={editQuestion}
+                                    onChange={(e) =>
+                                        setEditQuestion(
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <textarea
+                                    value={editAnswer}
+                                    onChange={(e) =>
+                                        setEditAnswer(
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <button
+                                    onClick={()=>
+                                        handleUpdate(flashcard.id)
+                                    }
+                                >
+                                    Save
+                                </button>
+                                <button onClick={() =>setEditingId(null)}>
+                                    Cancel
+                                </button>
+                            </div>
+                        ) : (
+                            <div>
+                                <h3>{flashcard.question}</h3>
+                                <p>{flashcard.answer}</p>
+                                <button onClick={() => handleDelete(flashcard.id)}>
+                                    Delete
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setEditingId(flashcard.id)
+                                        setEditQuestion(flashcard.question)
+                                        setEditAnswer(flashcard.answer)
+                                    }}
+                                >
+                                    Edit
+                                </button>
+                            </div>
+                        )
+                    }
+
                     </div>    
                 )
             )}

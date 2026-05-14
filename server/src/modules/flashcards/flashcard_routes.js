@@ -147,7 +147,7 @@ router.put("/:id",authMiddleware, async (req,res) => {
             })
         }
 
-        const updated = await prisma.flashcard.updated({
+        const updated = await prisma.flashcard.update({
             where: {id},
             data: {
                 question,
