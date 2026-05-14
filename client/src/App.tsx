@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage"
 import './App.css'
 import ProtectedRoute from "./components/ProtectedRoute"
 import DashboardPage from "./pages/DashboardPage"
+import DeckPage from "./pages/DeckPage"
 
 function App() {
   return (
@@ -21,6 +22,14 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardPage/>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/deck/:id"
+          element={
+            <ProtectedRoute>
+              <DeckPage/>
             </ProtectedRoute>
           }
         />
