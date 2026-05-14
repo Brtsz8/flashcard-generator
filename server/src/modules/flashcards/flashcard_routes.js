@@ -87,4 +87,81 @@ router.get('/:deckId', authMiddleware, async (req,res) => {
     }
 })
 
+router.delete("/:id",authMiddleware, async (req,res) => {
+    const {id} = req.params
+
+    try {
+        const flashcard = await prisma.flashcard.findUnique({
+            where : { id },
+            include : {deck: true}  //prisma doesnt include relations if we dont specify it
+        })
+
+        if(!flashcard) {
+            return res.status(404).json({
+                message: "Flashcard not found"
+            })
+        }
+
+        //chech if user is authorized to delete this flashcard
+        if(req.userId !== flashcard.deck.userId) {
+            return res.status(403).json({
+                messege: "User can't delete this flashcard (Unauthorized)"
+            })
+        }
+
+        await prisma.flashcard.delete({
+            where: {id}
+        })
+
+        res.status(200).json({
+            message: "Flashcard deleted"
+        })
+    }
+    catch(err)
+    {
+        console.error(err)
+        res.sendStatus(500)
+    }
+})
+
+router.put("/:id",authMiddleware, async (req,res) => {
+    const {id} = req.params
+    const {question, answer} = req.body
+
+    try {
+        const flashcard = await prisma.flashcard.findUnique({
+            where : { id },
+            include : {deck: true}  //prisma doesnt include relations if we dont specify it
+        })
+
+        if(!flashcard) {
+            return res.status(404).json({
+                message: "Flashcard not found"
+            })
+        }
+
+        //chech if user is authorized to delete this flashcard
+        if(req.userId !== flashcard.deck.userId) {
+            return res.status(403).json({
+                messege: "User can't delete this flashcard (Unauthorized)"
+            })
+        }
+
+        const updated = await prisma.flashcard.updated({
+            where: {id},
+            data: {
+                question,
+                answer
+            }
+        })
+
+        res.json(updated)
+    }
+    catch(err)
+    {
+        console.error(err)
+        res.sendStatus(500)
+    }
+})
+
 module.exports = router

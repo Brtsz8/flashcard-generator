@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getFlashcards, createFlashcard } from "../services/flashcardService";
+import { getFlashcards, createFlashcard, deleteFlashcard, updateFlashcard } 
+    from "../services/flashcardService";
 import { generateFlashcards } from "../services/aiService";
 import { useNavigate } from "react-router-dom";
 
@@ -97,6 +98,27 @@ export default function DeckPage() {
             console.error(err)
         } finally {
             setGenerating(false)
+        }
+    }
+
+    //handle delete flashcard
+    const handleDelete = async (
+        flashcardId: string
+    ) => {
+        try{
+
+        }catch(err){
+            console.error(err)
+        }
+    }
+    //handle update of a flashcard
+    const handleUpdate = async (
+        flashcardId: string
+    ) => {
+        try{
+
+        }catch(err){
+            console.error(err)
         }
     }
 
