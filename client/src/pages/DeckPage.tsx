@@ -4,12 +4,14 @@ import { getFlashcards, createFlashcard, deleteFlashcard, updateFlashcard }
     from "../services/flashcardService";
 import { generateFlashcards } from "../services/aiService";
 import { useNavigate } from "react-router-dom";
+import FlashcardCard from "../components/flashcards/FlashcardCard";
+import type { Flashcard } from "../types/flashcard";
 
-interface Flashcard {
-    id: string
-    question: string
-    answer: string
-}
+// interface Flashcard {
+//     id: string
+//     question: string
+//     answer: string
+// }
 
 export default function DeckPage() {
     const {id} = useParams();
@@ -211,70 +213,28 @@ export default function DeckPage() {
                 <p>No flashcards yet</p>
             )}
 
-            {flashcards.map(
-                (flashcard) => (
-                    <div
-                        key={flashcard.id}
-                        style={{
-                            border: "1px solid gray",
-                            padding: "1rem",
-                            marginBottom: "1rem"
-                        }}
-                    >  
-                    {
-                        editingId === flashcard.id ? (
-                            <div>
-                                <input
-                                    type="text"
-                                    value={editQuestion}
-                                    onChange={(e) =>
-                                        setEditQuestion(
-                                            e.target.value
-                                        )
-                                    }
-                                />
-                                <textarea
-                                    value={editAnswer}
-                                    onChange={(e) =>
-                                        setEditAnswer(
-                                            e.target.value
-                                        )
-                                    }
-                                />
-                                <button
-                                    onClick={()=>
-                                        handleUpdate(flashcard.id)
-                                    }
-                                >
-                                    Save
-                                </button>
-                                <button onClick={() =>setEditingId(null)}>
-                                    Cancel
-                                </button>
-                            </div>
-                        ) : (
-                            <div>
-                                <h3>{flashcard.question}</h3>
-                                <p>{flashcard.answer}</p>
-                                <button onClick={() => handleDelete(flashcard.id)}>
-                                    Delete
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setEditingId(flashcard.id)
-                                        setEditQuestion(flashcard.question)
-                                        setEditAnswer(flashcard.answer)
-                                    }}
-                                >
-                                    Edit
-                                </button>
-                            </div>
-                        )
+            {
+            flashcards.map((flashcard) => (
+                <FlashcardCard
+                    key={flashcard.id}
+                    flashcard={flashcard}
+                    onDelete={(id) =>
+                        setFlashcards((prev) =>
+                            prev.filter((card) =>
+                                card.id !== id
+                        ))
                     }
 
-                    </div>    
-                )
-            )}
+                    onUpdate={(updated) =>
+                        setFlashcards((prev) =>
+                            prev.map((card) =>
+                                card.id === updated.id
+                            ? updated
+                            : card
+                        ))
+                    }
+                />
+            ))}
         </div>
     )
 }
