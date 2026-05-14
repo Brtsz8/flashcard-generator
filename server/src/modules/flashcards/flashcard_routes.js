@@ -76,7 +76,7 @@ router.get('/:deckId', authMiddleware, async (req,res) => {
             }
         })
 
-        console.log(flashcards)
+        //console.log(flashcards)
 
         //send flashcards for this deck
         res.status(201).json(flashcards)
