@@ -1,6 +1,7 @@
 import { captureOwnerStack, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getFlashcards } from "../services/flashcardService";
+import MainLayout from "../layouts/MainLayout";
 
 interface Flashcard {
     id: string
@@ -75,7 +76,7 @@ export default function StudyPage() {
     }    
 
     return(
-        <div>
+        <MainLayout>
             <h1>Study Mode</h1>
             <hr/>
             <p>Card {currentIndex + 1} / {flashcards.length}</p>
@@ -118,6 +119,6 @@ export default function StudyPage() {
                 )}
 
             </div>
-        </div>
+        </MainLayout>
     )
 }
