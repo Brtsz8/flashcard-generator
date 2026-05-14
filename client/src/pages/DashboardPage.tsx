@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../store/AuthContext"
 import { getDecks, createDeck } from "../services/deckService"
+import MainLayout from "../layouts/MainLayout"
+
 
 interface Deck {
     id: string
@@ -68,7 +70,7 @@ export default function DashboardPage() {
     }
 
     return (
-        <div>
+        <MainLayout>
             <h1 className="text-4x1 font-bold">Welcome {user?.username}</h1>
             <button onClick={logout}>
                 Logout
@@ -129,6 +131,6 @@ export default function DashboardPage() {
                     <p>{deck.description}</p>
                 </div>
             ))}
-        </div>
+        </MainLayout>
     )
 }
