@@ -8,6 +8,7 @@ import './App.css'
 import ProtectedRoute from "./components/ProtectedRoute"
 import DashboardPage from "./pages/DashboardPage"
 import DeckPage from "./pages/DeckPage"
+import StudyPage from "./pages/StudyPage"
 
 function App() {
   return (
@@ -30,6 +31,14 @@ function App() {
           element={
             <ProtectedRoute>
               <DeckPage/>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/deck/:id/study"
+          element={
+            <ProtectedRoute>
+              <StudyPage/>
             </ProtectedRoute>
           }
         />

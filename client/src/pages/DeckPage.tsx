@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getFlashcards, createFlashcard } from "../services/flashcardService";
 import { generateFlashcards } from "../services/aiService";
+import { useNavigate } from "react-router-dom";
 
 interface Flashcard {
     id: string
@@ -15,6 +16,8 @@ export default function DeckPage() {
 
     const [flashcards, setFlashcards] = useState<Flashcard[]>([])
     const [loading, setLoading] = useState(true)
+
+    const navigate = useNavigate()
 
     //manual flashcard form
     const [question, setQuestion] = useState("")
@@ -105,6 +108,10 @@ export default function DeckPage() {
         <div>
             <h1>Deck Page</h1>
 
+            <hr/>
+            <button onClick={() => navigate(`/deck/${id}/study`)}>
+                Study Mode
+            </button>
             <hr/>
 
             <h2>Generate with AI</h2>

@@ -7,7 +7,7 @@ const router = express.Router()
 router.post('/', authMiddleware, async (req, res) => {
     //body contains only title and description for now
     const {title, description} = req.body
-    console.log(req.body)
+    //console.log(req.body)
     try {
         const deck = await prisma.deck.create({
             data: {
