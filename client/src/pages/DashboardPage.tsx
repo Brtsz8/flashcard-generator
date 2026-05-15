@@ -8,7 +8,7 @@ import MainLayout from "../layouts/MainLayout"
 interface Deck {
     id: string
     title: string
-    description?: string
+    description: string
 }
 
 export default function DashboardPage() {
@@ -75,6 +75,9 @@ export default function DashboardPage() {
     const filteredDecks = decks.filter((deck) =>
         deck.title.toLowerCase().includes(
                 search.toLowerCase()
+            ) ||
+        deck.description.toLowerCase().includes(
+                search.toLowerCase()
             )
     );
 
@@ -116,7 +119,7 @@ export default function DashboardPage() {
             </form>
 
             <hr />
-                    <input
+                <input
                     type="text"
                     placeholder="Search decks..."
                     value={search}
