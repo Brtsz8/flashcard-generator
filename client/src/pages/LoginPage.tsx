@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
+import { GoogleLogin } from "@react-oauth/google";
 
 import { loginUser } from "../services/authService"
 import { useAuth } from "../store/AuthContext"
@@ -134,7 +135,26 @@ export default function LoginPage() {
                     >
                         {loading ? "Logging in..." : "Login"}
                     </button>
-                </form>  
+                </form> 
+                {/*Google Auth*/}
+                <GoogleLogin
+
+                    onSuccess={async (
+                        credentialResponse
+                    ) => {
+
+                        console.log(
+                            credentialResponse
+                        );
+                    }}
+
+                    onError={() => {
+
+                        toast.error(
+                            "Google login failed"
+                        );
+                    }}
+                /> 
                 {/* Footer */}
                 <div className="mt-8 text-center">
                 <p className="text-sm text-gray-500">
