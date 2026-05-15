@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { updateFlashcard, deleteFlashcard } 
     from "../../services/flashcardService"
+import toast from "react-hot-toast"
 
 interface Flashcard {
     id: string
@@ -34,12 +35,13 @@ export default function FlashcardCard({
             )
 
             onUpdate(updated)
-
+            toast.success("Flashcard saved")
             setEditing(false)
         }
         catch(err)
         {
             console.error(err)
+            toast.error("Something went wrong!")
         }
     }
 
@@ -49,9 +51,11 @@ export default function FlashcardCard({
                 flashcard.id
             )
             onDelete(flashcard.id)
+            toast.success("Flashcard deleted")
         }
         catch(err){
             console.error(err)
+            toast.error("Something went wrong!")
         }
     }
 

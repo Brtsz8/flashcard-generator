@@ -2,6 +2,7 @@ import { captureOwnerStack, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getFlashcards } from "../services/flashcardService";
 import MainLayout from "../layouts/MainLayout";
+import toast from "react-hot-toast";
 
 interface Flashcard {
     id: string
@@ -66,7 +67,7 @@ export default function StudyPage() {
     const handleNext = () => {
         // last card case
         if(currentIndex === flashcards.length - 1) {
-            alert("Study session complete!")
+            toast.success("Study session complete!")
             navigate(`/deck/${deckId}`)
             return
         }

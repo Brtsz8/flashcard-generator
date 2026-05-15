@@ -3,6 +3,7 @@ import {
   Routes,
   Route
 } from "react-router-dom"
+import { Toaster } from "react-hot-toast"
 import LoginPage from "./pages/LoginPage"
 import './App.css'
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -13,6 +14,7 @@ import StudyPage from "./pages/StudyPage"
 function App() {
   return (
     <BrowserRouter>
+      <Toaster/>
       <Routes>
         <Route
           path="/login"

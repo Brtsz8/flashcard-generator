@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import FlashcardCard from "../components/flashcards/FlashcardCard";
 import type { Flashcard } from "../types/flashcard";
 import MainLayout from "../layouts/MainLayout";
+import toast from "react-hot-toast";
 
 // interface Flashcard {
 //     id: string
@@ -69,7 +70,7 @@ export default function DeckPage() {
                 ...prev,
                 newFlashcard
             ])
-
+            toast.success("Flashcard created")
             setQuestion("")
             setAnswer("")
         }
@@ -101,6 +102,7 @@ export default function DeckPage() {
             console.error(err)
         } finally {
             setGenerating(false)
+            toast.success("Flashcards generated")
         }
     }
 

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { loginUser } from "../services/authService"
 import { useAuth } from "../store/AuthContext"
+import toast from "react-hot-toast"
 
 export default function LoginPage() {
     const navigate = useNavigate()
@@ -19,10 +20,13 @@ export default function LoginPage() {
                 email,
                 password
             )
-
+            
             await login(data.token)
+            toast.success("Logged In")
             navigate("/dashboard")
+
         } catch (err) {
+            toast.error("Wrong email or password!")
             console.error(err)
         }
     }
