@@ -20,6 +20,9 @@ export default function DashboardPage() {
     const [description, setDescription] = useState("")
     const [loading, setLoading] = useState(true)
 
+    //search
+    const [search, setSearch] = useState("");
+
     //fetch decks
     useEffect(() => {
         const fetchDecks = async () => {
@@ -69,6 +72,12 @@ export default function DashboardPage() {
         return <div>Loading...</div>
     }
 
+    const filteredDecks = decks.filter((deck) =>
+        deck.title.toLowerCase().includes(
+                search.toLowerCase()
+            )
+    );
+
     return (
         <MainLayout>
             <h1 className="text-4x1 font-bold">Welcome {user?.username}</h1>
@@ -107,6 +116,24 @@ export default function DashboardPage() {
             </form>
 
             <hr />
+                    <input
+                    type="text"
+                    placeholder="Search decks..."
+                    value={search}
+                    onChange={(e) =>
+                        setSearch(
+                            e.target.value
+                        )
+                    }
+                    className="
+                        w-full
+                        border
+                        rounded-lg
+                        p-3
+                        mb-6
+                    "
+                />
+            <hr/>
 
             <h2>Your Decks</h2>
             
@@ -114,7 +141,16 @@ export default function DashboardPage() {
                 <p>No decks yet</p>
             )}
 
-            {decks.map((deck) => (
+            {
+            filteredDecks.length === 0 && (
+
+                <p>
+                    No decks found
+                </p>
+            )
+            }
+
+            {filteredDecks.map((deck) => (
                 <div
                     key={deck.id}
                     onClick={() =>

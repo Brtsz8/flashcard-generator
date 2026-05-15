@@ -32,6 +32,9 @@ export default function DeckPage() {
     const [prompt, setPrompt] = useState("")
     const [generating, setGenerating] = useState(false)
 
+    //search
+    const [search, setSearch] = useState("");
+
     //fetch flashcards
     useEffect(() => {
         const fetchFlashcards = async () => {
@@ -110,6 +113,15 @@ export default function DeckPage() {
         return <div>Loading...</div>
     }
 
+    const filteredFlashcards = flashcards.filter((flashcard) =>
+        flashcard.question.toLowerCase().includes(
+                search.toLowerCase()
+            ) ||
+        flashcard.answer.toLowerCase().includes(
+                search.toLowerCase()
+            )
+    );
+
     return(
         <MainLayout>
             
@@ -164,6 +176,27 @@ export default function DeckPage() {
                 </button>
             </form>
 
+            <hr/>
+
+            <input
+                type="text"
+                placeholder="Search flashcards..."
+                value={search}
+                onChange={(e) =>
+                    setSearch(
+                        e.target.value
+                    )
+                }
+                className="
+                    w-full
+                    border
+                    rounded-lg
+                    p-3
+                    mb-6
+                "
+            />
+            <hr/>
+
             <h2>Flashcards</h2>
             
             {flashcards.length === 0 && (
@@ -171,7 +204,7 @@ export default function DeckPage() {
             )}
 
             {
-            flashcards.map((flashcard) => (
+            filteredFlashcards.map((flashcard) => (
                 <FlashcardCard
                     key={flashcard.id}
                     flashcard={flashcard}
