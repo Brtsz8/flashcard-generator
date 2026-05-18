@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import FlashcardCard from "../components/flashcards/FlashcardCard";
 import type { Flashcard } from "../types/flashcard";
 import MainLayout from "../layouts/MainLayout";
+import toast from "react-hot-toast";
 
 // interface Flashcard {
 //     id: string
@@ -30,6 +31,9 @@ export default function DeckPage() {
     //ai generation with gemini
     const [prompt, setPrompt] = useState("")
     const [generating, setGenerating] = useState(false)
+
+    //search
+    const [search, setSearch] = useState("");
 
     //fetch flashcards
     useEffect(() => {
@@ -69,7 +73,7 @@ export default function DeckPage() {
                 ...prev,
                 newFlashcard
             ])
-
+            toast.success("Flashcard created")
             setQuestion("")
             setAnswer("")
         }
@@ -99,8 +103,10 @@ export default function DeckPage() {
             setPrompt("")
         } catch (err) {
             console.error(err)
+            toast.error("Something went wrong! Try again")
         } finally {
             setGenerating(false)
+            toast.success("Flashcards generated")
         }
     }
 
@@ -108,89 +114,408 @@ export default function DeckPage() {
         return <div>Loading...</div>
     }
 
+    const filteredFlashcards = flashcards.filter((flashcard) =>
+        flashcard.question.toLowerCase().includes(
+                search.toLowerCase()
+            ) ||
+        flashcard.answer.toLowerCase().includes(
+                search.toLowerCase()
+            )
+    );
+
     return(
         <MainLayout>
+        <div className="mx-auto flex max-w-5xl flex-col gap-10">
             
-            <h1>Deck Page</h1>
+            {/* Header */}
+            <section className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                <p className="mb-2 text-sm uppercase tracking-widest text-gray-400">
+                    Deck
+                </p>
 
-            <hr/>
-            <button onClick={() => navigate(`/deck/${id}/study`)}>
-                Study Mode
-            </button>
-            <hr/>
+                <h1 className="text-4xl font-bold tracking-tight text-black">
+                    Flashcards
+                </h1>
 
-            <h2>Generate with AI</h2>
+                <p className="mt-3 text-gray-500">
+                    Review, create and generate flashcards.
+                </p>
+                </div>
 
-            <form onSubmit={handleGenerate}>
+                <button
+                onClick={() =>
+                    navigate(`/deck/${id}/study`)
+                }
+                className="
+                    rounded-2xl
+                    bg-black
+                    px-6
+                    py-3
+                    text-sm
+                    font-medium
+                    text-white
+                    transition
+                    hover:opacity-90
+                "
+                >
+                Start Study Mode
+                </button>
+            </div>
+            </section>
+
+            {/* AI Generation */}
+            <section className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+            <div className="mb-8">
+                <h2 className="text-2xl font-semibold text-black">
+                Generate with AI
+                </h2>
+
+                <p className="mt-2 text-sm text-gray-500">
+                Paste notes, topics or summaries and
+                generate flashcards automatically.
+                </p>
+            </div>
+
+            <form
+                onSubmit={handleGenerate}
+                className="flex flex-col gap-5"
+            >
                 <textarea
-                    placeholder="Enter topic or notes..."
-                    value={prompt}
-                    onChange={(e) => setPrompt(
-                        e.target.value
-                    )}
+                placeholder="Enter topic or notes..."
+                value={prompt}
+                onChange={(e) =>
+                    setPrompt(e.target.value)
+                }
+                rows={6}
+                className="
+                    resize-none
+                    rounded-2xl
+                    border
+                    border-gray-300
+                    px-4
+                    py-3
+                    outline-none
+                    transition
+                    placeholder:text-gray-400
+                    focus:border-black
+                "
                 />
+
+                <div className="flex justify-end">
                 <button
                     type="submit"
                     disabled={generating}
+                    className="
+                    rounded-2xl
+                    bg-black
+                    px-6
+                    py-3
+                    text-sm
+                    font-medium
+                    text-white
+                    transition
+                    hover:opacity-90
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
+                    "
                 >
-                    {generating ? "Generating..." : "Generate"}
+                    {generating
+                    ? "Generating..."
+                    : "Generate Flashcards"}
                 </button>
+                </div>
             </form>
-            
-            <hr/>
-            <h2>Add Flashcard</h2>
+            </section>
 
-            <form onSubmit={handleCreateFlashcard}>
-                <input 
+            {/* Manual creation */}
+            <section className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+            <div className="mb-8">
+                <h2 className="text-2xl font-semibold text-black">
+                Add Flashcard
+                </h2>
+
+                <p className="mt-2 text-sm text-gray-500">
+                Create flashcards manually.
+                </p>
+            </div>
+
+            <form
+                onSubmit={handleCreateFlashcard}
+                className="flex flex-col gap-5"
+            >
+                <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-gray-700">
+                    Question
+                </label>
+
+                <input
                     type="text"
-                    placeholder="Question"
+                    placeholder="Enter question..."
                     value={question}
-                    onChange={(e) => setQuestion(
-                        e.target.value
-                    )}
+                    onChange={(e) =>
+                    setQuestion(e.target.value)
+                    }
+                    className="
+                    rounded-2xl
+                    border
+                    border-gray-300
+                    px-4
+                    py-3
+                    outline-none
+                    transition
+                    placeholder:text-gray-400
+                    focus:border-black
+                    "
                 />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-gray-700">
+                    Answer
+                </label>
+
                 <textarea
-                    placeholder="Answer"
+                    placeholder="Enter answer..."
                     value={answer}
-                    onChange={(e) => setAnswer(
-                        e.target.value
-                    )}
+                    onChange={(e) =>
+                    setAnswer(e.target.value)
+                    }
+                    rows={5}
+                    className="
+                    resize-none
+                    rounded-2xl
+                    border
+                    border-gray-300
+                    px-4
+                    py-3
+                    outline-none
+                    transition
+                    placeholder:text-gray-400
+                    focus:border-black
+                    "
                 />
+                </div>
 
-                <button type="submit">
-                    Add
+                <div className="flex justify-end">
+                <button
+                    type="submit"
+                    className="
+                    rounded-2xl
+                    border
+                    border-black
+                    px-6
+                    py-3
+                    text-sm
+                    font-medium
+                    transition
+                    hover:bg-gray-100
+                    "
+                >
+                    Add Flashcard
                 </button>
+                </div>
             </form>
+            </section>
 
-            <h2>Flashcards</h2>
-            
+            {/* Search */}
+            <section>
+            <div className="mb-6">
+                <h2 className="text-2xl font-semibold text-black">
+                Your Flashcards
+                </h2>
+
+                <p className="mt-2 text-sm text-gray-500">
+                Search through your deck.
+                </p>
+            </div>
+
+            <input
+                type="text"
+                placeholder="Search flashcards..."
+                value={search}
+                onChange={(e) =>
+                setSearch(e.target.value)
+                }
+                className="
+                mb-8
+                w-full
+                rounded-2xl
+                border
+                border-gray-300
+                bg-white
+                px-4
+                py-3
+                outline-none
+                transition
+                placeholder:text-gray-400
+                focus:border-black
+                "
+            />
+
+            {/* Empty state */}
             {flashcards.length === 0 && (
-                <p>No flashcards yet</p>
+                <div className="rounded-3xl border border-dashed border-gray-300 p-12 text-center">
+                <p className="text-lg font-medium text-black">
+                    No flashcards yet
+                </p>
+
+                <p className="mt-2 text-sm text-gray-500">
+                    Create your first flashcard to
+                    begin studying.
+                </p>
+                </div>
             )}
 
-            {
-            flashcards.map((flashcard) => (
-                <FlashcardCard
+            {/* Search empty state */}
+            {flashcards.length > 0 &&
+                filteredFlashcards.length === 0 && (
+                <div className="rounded-3xl border border-dashed border-gray-300 p-12 text-center">
+                    <p className="text-lg font-medium text-black">
+                    No flashcards found
+                    </p>
+
+                    <p className="mt-2 text-sm text-gray-500">
+                    Try another search term.
+                    </p>
+                </div>
+                )}
+
+            {/* Flashcards */}
+            <div className="flex flex-col gap-5">
+                {filteredFlashcards.map(
+                (flashcard) => (
+                    <FlashcardCard
                     key={flashcard.id}
                     flashcard={flashcard}
                     onDelete={(id) =>
                         setFlashcards((prev) =>
-                            prev.filter((card) =>
-                                card.id !== id
-                        ))
+                        prev.filter(
+                            (card) =>
+                            card.id !== id
+                        )
+                        )
                     }
-
                     onUpdate={(updated) =>
                         setFlashcards((prev) =>
-                            prev.map((card) =>
-                                card.id === updated.id
+                        prev.map((card) =>
+                            card.id === updated.id
                             ? updated
                             : card
-                        ))
+                        )
+                        )
                     }
-                />
-            ))}
-            
+                    />
+                )
+                )}
+            </div>
+            </section>
+        </div>
         </MainLayout>
+        // <MainLayout>
+            
+        //     <h1>Deck Page</h1>
+
+        //     <hr/>
+        //     <button onClick={() => navigate(`/deck/${id}/study`)}>
+        //         Study Mode
+        //     </button>
+        //     <hr/>
+
+        //     <h2>Generate with AI</h2>
+
+        //     <form onSubmit={handleGenerate}>
+        //         <textarea
+        //             placeholder="Enter topic or notes..."
+        //             value={prompt}
+        //             onChange={(e) => setPrompt(
+        //                 e.target.value
+        //             )}
+        //         />
+        //         <button
+        //             type="submit"
+        //             disabled={generating}
+        //         >
+        //             {generating ? "Generating..." : "Generate"}
+        //         </button>
+        //     </form>
+            
+        //     <hr/>
+        //     <h2>Add Flashcard</h2>
+
+        //     <form onSubmit={handleCreateFlashcard}>
+        //         <input 
+        //             type="text"
+        //             placeholder="Question"
+        //             value={question}
+        //             onChange={(e) => setQuestion(
+        //                 e.target.value
+        //             )}
+        //         />
+        //         <textarea
+        //             placeholder="Answer"
+        //             value={answer}
+        //             onChange={(e) => setAnswer(
+        //                 e.target.value
+        //             )}
+        //         />
+
+        //         <button type="submit">
+        //             Add
+        //         </button>
+        //     </form>
+
+        //     <hr/>
+
+        //     <input
+        //         type="text"
+        //         placeholder="Search flashcards..."
+        //         value={search}
+        //         onChange={(e) =>
+        //             setSearch(
+        //                 e.target.value
+        //             )
+        //         }
+        //         className="
+        //             w-full
+        //             border
+        //             rounded-lg
+        //             p-3
+        //             mb-6
+        //         "
+        //     />
+        //     <hr/>
+
+        //     <h2>Flashcards</h2>
+            
+        //     {flashcards.length === 0 && (
+        //         <p>No flashcards yet</p>
+        //     )}
+
+        //     {
+        //     filteredFlashcards.map((flashcard) => (
+        //         <FlashcardCard
+        //             key={flashcard.id}
+        //             flashcard={flashcard}
+        //             onDelete={(id) =>
+        //                 setFlashcards((prev) =>
+        //                     prev.filter((card) =>
+        //                         card.id !== id
+        //                 ))
+        //             }
+
+        //             onUpdate={(updated) =>
+        //                 setFlashcards((prev) =>
+        //                     prev.map((card) =>
+        //                         card.id === updated.id
+        //                     ? updated
+        //                     : card
+        //                 ))
+        //             }
+        //         />
+        //     ))}
+            
+        // </MainLayout>
     )
 }

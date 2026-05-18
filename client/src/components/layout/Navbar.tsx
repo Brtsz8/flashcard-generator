@@ -1,3 +1,4 @@
+import toast from "react-hot-toast"
 import { Link, useNavigate } from "react-router-dom"
 
 export default function Navbar() {
@@ -6,6 +7,7 @@ export default function Navbar() {
     const handleLogout = () => {
         localStorage.removeItem("token")
         navigate("/login")
+        toast("Goodbye!")
     }
 
     return (

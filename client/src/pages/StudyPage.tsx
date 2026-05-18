@@ -1,5 +1,7 @@
-import { captureOwnerStack, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 import { getFlashcards } from "../services/flashcardService";
 import MainLayout from "../layouts/MainLayout";
 
@@ -20,6 +22,7 @@ export default function StudyPage() {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [showAnswer, setShowAnswer] = useState(false)
 
+    
     
     //fetch flashcards
     useEffect(() => {
@@ -49,12 +52,20 @@ export default function StudyPage() {
     // if empty
     if(flashcards.length === 0){
         return(
-            <div>
-                <h2>No flashcards yet</h2>
-                <button onClick={() => navigate(`/deck/${deckId}`)}>
-                    Go back to your deck
+            <MainLayout>
+                <div className="flex min-h-[70vh] flex-col items-center justify-center gap-6">
+                <h2 className="text-3xl font-semibold text-black">
+                    No flashcards yet
+                </h2>
+
+                <button
+                    onClick={() => navigate(`/deck/${deckId}`)}
+                    className="rounded-xl border border-gray-300 px-6 py-3 text-sm font-medium transition hover:bg-gray-100"
+                >
+                    Back to Deck
                 </button>
-            </div>
+                </div>
+            </MainLayout>
         )
     }
     
@@ -66,7 +77,7 @@ export default function StudyPage() {
     const handleNext = () => {
         // last card case
         if(currentIndex === flashcards.length - 1) {
-            alert("Study session complete!")
+            toast.success("Study session complete!")
             navigate(`/deck/${deckId}`)
             return
         }
@@ -76,49 +87,83 @@ export default function StudyPage() {
     }    
 
     return(
-        <MainLayout>
-            <h1>Study Mode</h1>
-            <hr/>
-            <p>Card {currentIndex + 1} / {flashcards.length}</p>
-            <hr/>
-            <div style={{
-                border: "2px solid gray",
-                padding: "3rem",
-                marginTop: "2rem",
-                minHeight: "200px"
-            }}
-            >
-                {!showAnswer ? (
-                    <div>
-                        <h2>Question</h2>
-                        <p>
-                            {currentCard.question}
-                        </p>
-                    </div>
-                ) : (
-                    <div>
-                        <h2>Answer</h2>
-                        <p>
-                            {currentCard.answer}
-                        </p>
-                    </div>
-                )}
-            </div>
+    <MainLayout>
+        <div className="mx-auto flex min-h-[80vh] max-w-3xl flex-col px-6 py-12">
+        
+        {/* Header */}
+        <div className="mb-10">
+            <h1 className="text-4xl font-bold tracking-tight text-black">
+            Study Mode
+            </h1>
 
-            <div 
+            <div className="mt-4 flex items-center justify-between">
+            <p className="text-sm text-gray-500">
+                Card {currentIndex + 1} of {flashcards.length}
+            </p>
+
+            <div className="h-2 w-40 overflow-hidden rounded-full bg-gray-200">
+                <div
+                className="h-full bg-black transition-all duration-300"
                 style={{
-                    marginTop: "2rem"
+                    width: `${
+                    ((currentIndex + 1) / flashcards.length) * 100
+                    }%`,
                 }}
-            >
-                {!showAnswer ? (
-                    <button onClick={() => setShowAnswer(true)}>
-                        Show Answer
-                    </button>
-                ) : (
-                    <button onClick={handleNext}>Next Card</button>
-                )}
-
+                />
             </div>
-        </MainLayout>
+            </div>
+        </div>
+
+        {/* Flashcard */}
+        <div
+            className="
+            flex flex-1 flex-col justify-between
+            rounded-3xl border border-gray-300
+            bg-white p-10 shadow-sm
+            "
+        >
+            <div>
+            <p className="mb-3 text-sm uppercase tracking-widest text-gray-400">
+                {!showAnswer ? "Question" : "Answer"}
+            </p>
+
+            <div className="min-h-[220px] flex items-center">
+                <p className="text-2xl leading-relaxed text-black">
+                {!showAnswer
+                    ? currentCard.question
+                    : currentCard.answer}
+                </p>
+            </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="mt-10 flex justify-end">
+            {!showAnswer ? (
+                <button
+                onClick={() => setShowAnswer(true)}
+                className="
+                    rounded-2xl bg-black px-6 py-3
+                    text-sm font-medium text-white
+                    transition hover:opacity-90
+                "
+                >
+                Show Answer
+                </button>
+            ) : (
+                <button
+                onClick={handleNext}
+                className="
+                    rounded-2xl border border-black
+                    px-6 py-3 text-sm font-medium
+                    transition hover:bg-gray-100
+                "
+                >
+                Next Card
+                </button>
+            )}
+            </div>
+        </div>
+        </div>
+    </MainLayout>
     )
 }
