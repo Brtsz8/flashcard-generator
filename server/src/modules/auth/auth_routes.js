@@ -3,8 +3,11 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const prisma = require('../../config/db.js')
 const authMiddleware = require('./auth_middleware.js')
+//google OAuth2
+const { OAuth2Client } = require("google-auth-library")
 
 const router = express.Router()
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 router.get("/me", authMiddleware, async (req, res) => {
 
@@ -155,6 +158,50 @@ router.delete('/delete', async (req,res) => {
     } catch (err) {
         console.log(err.message)
         res.sendStatus(503)
+    }
+})
+
+router.post("/google", async (req,res) => {
+    const { credential } = req.body
+    try{
+        //google token verification
+
+        const ticket = await googleClient.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID
+        })
+
+        const payload = ticket.getPayload()
+
+        const { email, name, picture } = payload
+
+        //we will look for user, checking if account was alredy registered
+        //if that fails we will create account based on data from oauth
+
+        //look for user 
+        let user = await prisma.user.findUnique({
+            where: { email }
+        })
+
+        //create user if needed
+        if(!user){
+            user = await prisma.user.create({
+                data: {
+                    email,
+                    username: name,
+                    authProvider: "GOOGLE"
+                }
+            })
+        }
+
+        //return our token (not googles)
+        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '24h'})
+        res.json({token})
+    }catch (err){
+        console.error(err)
+        res.status(500).json({
+            message: "Google Auth Failed"
+        })
     }
 })
 
