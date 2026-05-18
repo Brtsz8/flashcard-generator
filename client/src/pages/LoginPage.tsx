@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { GoogleLogin } from "@react-oauth/google";
 
-import { loginUser } from "../services/authService"
+import { googleLogin, loginUser } from "../services/authService"
 import { useAuth } from "../store/AuthContext"
 
 export default function LoginPage() {
@@ -142,10 +142,17 @@ export default function LoginPage() {
                     onSuccess={async (
                         credentialResponse
                     ) => {
+                        try {
+                            const data = await googleLogin(
+                                credentialResponse.credential!)
 
-                        console.log(
-                            credentialResponse
-                        );
+                            localStorage.setItem("token", data.token)
+
+                            toast.success("Logged in with Google")
+                            navigate("/dashboard")
+                        } catch (err) {
+                            toast.error("Google login failed")
+                        }
                     }}
 
                     onError={() => {
@@ -155,6 +162,10 @@ export default function LoginPage() {
                         );
                     }}
                 /> 
+                {/*Facebook Auth*/}
+
+                {/*Discord auth*/}
+                
                 {/* Footer */}
                 <div className="mt-8 text-center">
                 <p className="text-sm text-gray-500">
