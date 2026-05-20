@@ -17,7 +17,7 @@ model User {
   name        String?
   avatar      String?
 
-  googleId    String? @unique
+  providerId    String? @unique
   authProvider AuthProvider @default(LOCAL)
 
   createdAt DateTime @default(now())
@@ -29,6 +29,8 @@ model User {
 enum AuthProvider {
   LOCAL
   GOOGLE
+  FACEBOOK
+  GITHUB
 }
 
 model Deck {

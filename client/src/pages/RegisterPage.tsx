@@ -12,17 +12,10 @@ import { registerUser } from "../services/authService"
 export default function RegisterPage() {
   const navigate = useNavigate()
 
-  const [username, setUsername] =
-    useState("")
-
-  const [email, setEmail] =
-    useState("")
-
-  const [password, setPassword] =
-    useState("")
-
-  const [loading, setLoading] =
-    useState(false)
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (
     e: React.FormEvent

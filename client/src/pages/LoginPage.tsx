@@ -4,7 +4,8 @@ import toast from "react-hot-toast"
 import { GoogleLogin } from "@react-oauth/google";
 
 import { googleLogin, loginUser } from "../services/authService"
-import { useAuth } from "../store/AuthContext"
+//import { useAuth } from "../store/AuthContext"
+import { useAuth } from "../hooks/useAuth"
 
 export default function LoginPage() {
     const navigate = useNavigate()
@@ -146,7 +147,9 @@ export default function LoginPage() {
                             const data = await googleLogin(
                                 credentialResponse.credential!)
 
-                            localStorage.setItem("token", data.token)
+                            //localStorage.setItem("token", data.token)
+                            //this caused problems - state not updating fast enough, fix:
+                            await login(data.token)
 
                             toast.success("Logged in with Google")
                             navigate("/dashboard")
@@ -163,7 +166,7 @@ export default function LoginPage() {
                     }}
                 /> 
                 {/*Facebook Auth*/}
-
+                
                 {/*Discord auth*/}
                 
                 {/* Footer */}

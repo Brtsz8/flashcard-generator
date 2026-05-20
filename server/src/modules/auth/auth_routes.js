@@ -173,23 +173,45 @@ router.post("/google", async (req,res) => {
 
         const payload = ticket.getPayload()
 
-        const { email, name, picture } = payload
+        const { email, name, picture, sub} = payload
 
         //we will look for user, checking if account was alredy registered
         //if that fails we will create account based on data from oauth
 
         //look for user 
-        let user = await prisma.user.findUnique({
-            where: { email }
+        //using findFist insted of findUnique because findUNique doesn't support OR operator
+        let user = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    { providerId: sub }, //existing google account
+                    { email }           //or existing local acoount with same email
+                ]
+            }
         })
 
-        //create user if needed
+        //if user exists localy
+        //but google account is not linked 
+        if (user && !user.providerId ) {
+            user = await prisma.user.update({
+                where: {
+                    id: user.id
+                },
+                data: {
+                    authProvider: "GOOGLE",
+                    providerId: sub,
+                    avatar: picture
+                }
+            })
+        }
+        //create user if needed, via google
         if(!user){
             user = await prisma.user.create({
                 data: {
                     email,
                     username: name,
-                    authProvider: "GOOGLE"
+                    avatar: picture,
+                    authProvider: "GOOGLE",
+                    providerId: sub
                 }
             })
         }
@@ -203,6 +225,34 @@ router.post("/google", async (req,res) => {
             message: "Google Auth Failed"
         })
     }
+})
+
+router.post("/facebook", async (req,res) => {
+    
+    try{
+        //todo
+    }
+    catch (err){
+        console.error(err)
+        res.status(500).json({
+            message: "Google Auth Failed"
+        })
+    }
+
+})
+
+router.post("/github", async (req,res) => {
+    
+    try{
+        //todo
+    }
+    catch (err){
+        console.error(err)
+        res.status(500).json({
+            message: "Google Auth Failed"
+        })
+    }
+
 })
 
 module.exports = router
