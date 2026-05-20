@@ -7,6 +7,9 @@ import { googleLogin, loginUser } from "../services/authService"
 //import { useAuth } from "../store/AuthContext"
 import { useAuth } from "../hooks/useAuth"
 
+//components
+import AuthHeader from "../components/auth/AuthHeader"
+
 export default function LoginPage() {
     const navigate = useNavigate()
     const { login } = useAuth()
@@ -45,14 +48,10 @@ export default function LoginPage() {
                 p-10 shadow-sm"
             >
                 {/*Header*/}
-                <div className="mb-10">
-                    <h1 className="text-4xl font-bold tracking-tight text-black">
-                        Welcome back
-                    </h1>
-                    <p className="mt-3 text-sm text-gray-500">
-                        Log in to continue studying
-                    </p>
-                </div>
+                <AuthHeader
+                    title="Welcome back"
+                    subtitle="Log in to continue studying!"
+                />
                 {/*Form*/}
                 <form onSubmit={handleSubmit}
                     className="flex flex-col gap-5"
