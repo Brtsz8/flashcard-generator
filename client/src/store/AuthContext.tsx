@@ -1,6 +1,5 @@
 import React, {
     createContext,
-    useContext,
     useEffect,
     useState
 } from "react"
@@ -19,7 +18,7 @@ interface AuthContextType {
     logout: () => void
 }
 
-const AuthContext = createContext<AuthContextType | null>(null)
+export const AuthContext = createContext<AuthContextType | null>(null)
 
 // AuthProvider wraps the application and provides globla auth state
 export const AuthProvider = ({
@@ -90,21 +89,4 @@ export const AuthProvider = ({
             {children}
         </AuthContext.Provider>
     )
-}
-
-//Custom hook for easier auth access
-//const auth = useAuth()
-//is better than
-//const context = useContext(AuthContext)
-export const useAuth = () => {
-    const context = useContext(AuthContext)
-
-    //safety check
-    if(!context) {
-        throw new Error(
-            "useAuth must be used inside AuthProvider"
-        )
-    }
-
-    return context
 }

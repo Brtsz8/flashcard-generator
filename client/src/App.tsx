@@ -6,7 +6,7 @@ import {
 import { Toaster } from "react-hot-toast"
 import LoginPage from "./pages/LoginPage"
 import './App.css'
-import ProtectedRoute from "./components/ProtectedRoute"
+import ProtectedRoute from "./components/ui/ProtectedRoute"
 import DashboardPage from "./pages/DashboardPage"
 import DeckPage from "./pages/DeckPage"
 import StudyPage from "./pages/StudyPage"

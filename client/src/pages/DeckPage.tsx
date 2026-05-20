@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getFlashcards, createFlashcard, deleteFlashcard, updateFlashcard } 
+import { getFlashcards, createFlashcard } 
     from "../services/flashcardService";
 import { generateFlashcards } from "../services/aiService";
 import { useNavigate } from "react-router-dom";

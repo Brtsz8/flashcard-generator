@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { useAuth } from "../store/AuthContext"
+import { useAuth } from "../hooks/useAuth"
 import { getDecks, createDeck } from "../services/deckService"
 import MainLayout from "../layouts/MainLayout"
 
