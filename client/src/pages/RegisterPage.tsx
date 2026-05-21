@@ -3,37 +3,35 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import toast from "react-hot-toast"
+import { GoogleLogin } from "@react-oauth/google";
+
+import { googleLogin} from "../services/authService"
 
 import { registerUser } from "../services/authService"
 import AuthFooter from "../components/auth/AuthFooter"
 import AuthHeader from "../components/auth/AuthHeader"
+import { useAuth } from "../hooks/useAuth"
+import RegisterForm from "../components/auth/RegisterForm"
 
 export default function RegisterPage() {
   const navigate = useNavigate()
 
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
 
-  const handleSubmit = async (
-    e: React.FormEvent
+  const handleRegister = async (
+    username: string,
+    email: string,
+    password: string
   ) => {
-    e.preventDefault()
 
     try {
-      setLoading(true)
-
       const data = await registerUser(
         username,
         email,
         password
       )
 
-      localStorage.setItem(
-        "token",
-        data.token
-      )
+      await login(data.token)
 
       toast.success("Account created")
 
@@ -41,8 +39,6 @@ export default function RegisterPage() {
     } catch (err) {
       toast.error("Register failed")
       console.error(err)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -67,147 +63,39 @@ export default function RegisterPage() {
         />
 
         {/* Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-5"
-        >
-          {/* Username */}
-          <div className="flex flex-col gap-2">
-            <label
-              className="
-                text-sm
-                font-medium
-                text-gray-700
-              "
-            >
-              Username
-            </label>
+        <RegisterForm onSubmit={handleRegister}/>
 
-            <input
-              placeholder="johnsmith"
-              value={username}
-              onChange={(e) =>
-                setUsername(
-                  e.target.value
-                )
-              }
-              className="
-                w-full
-                rounded-2xl
-                border
-                border-gray-300
-                bg-white
-                px-4
-                py-3
-                text-black
-                outline-none
-                transition
-                placeholder:text-gray-400
-                focus:border-black
-              "
-            />
-          </div>
+        <div className="flex flex-col gap-2 py-2">
+            {/*Google Auth*/}
+            <GoogleLogin
 
-          {/* Email */}
-          <div className="flex flex-col gap-2">
-            <label
-              className="
-                text-sm
-                font-medium
-                text-gray-700
-              "
-            >
-              Email
-            </label>
+                onSuccess={async (
+                    credentialResponse
+                ) => {
+                    try {
+                        const data = await googleLogin(
+                            credentialResponse.credential!)
 
-            <input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) =>
-                setEmail(
-                  e.target.value
-                )
-              }
-              className="
-                w-full
-                rounded-2xl
-                border
-                border-gray-300
-                bg-white
-                px-4
-                py-3
-                text-black
-                outline-none
-                transition
-                placeholder:text-gray-400
-                focus:border-black
-              "
-            />
-          </div>
+                        await login(data.token)
 
-          {/* Password */}
-          <div className="flex flex-col gap-2">
-            <label
-              className="
-                text-sm
-                font-medium
-                text-gray-700
-              "
-            >
-              Password
-            </label>
+                        toast.success("Logged in with Google")
+                        navigate("/dashboard")
+                    } catch (err) {
+                        toast.error("Google login failed")
+                    }
+                }}
 
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) =>
-                setPassword(
-                  e.target.value
-                )
-              }
-              className="
-                w-full
-                rounded-2xl
-                border
-                border-gray-300
-                bg-white
-                px-4
-                py-3
-                text-black
-                outline-none
-                transition
-                placeholder:text-gray-400
-                focus:border-black
-              "
-            />
-          </div>
+                onError={() => {
 
-          {/* Submit */}
-          <button
-            disabled={loading}
-            className="
-              mt-4
-              w-full
-              rounded-2xl
-              bg-black
-              px-4
-              py-3
-              text-sm
-              font-medium
-              text-white
-              transition
-              hover:opacity-90
-              disabled:cursor-not-allowed
-              disabled:opacity-50
-            "
-          >
-            {loading
-              ? "Creating account..."
-              : "Create account"}
-          </button>
-        </form>
+                    toast.error(
+                        "Google login failed"
+                    );
+                }}
+            /> 
+            {/*Facebook Auth*/}
+            
+            {/*Discord auth*/}
+        </div>
 
         {/* Footer */}
         <AuthFooter
