@@ -1,13 +1,12 @@
 import { useState } from "react"
 
-import {
-  useNavigate,
-  Link,
-} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 import toast from "react-hot-toast"
 
 import { registerUser } from "../services/authService"
+import AuthFooter from "../components/auth/AuthFooter"
+import AuthHeader from "../components/auth/AuthHeader"
 
 export default function RegisterPage() {
   const navigate = useNavigate()
@@ -62,19 +61,10 @@ export default function RegisterPage() {
         "
       >
         {/* Header */}
-        <div className="mb-10">
-          <p className="mb-3 text-sm uppercase tracking-widest text-gray-400">
-            Flashcards App
-          </p>
-
-          <h1 className="text-4xl font-bold tracking-tight text-black">
-            Create account
-          </h1>
-
-          <p className="mt-3 text-sm text-gray-500">
-            Start building your study system.
-          </p>
-        </div>
+        <AuthHeader
+          title="Create account"
+          subtitle="Start building your study system"
+        />
 
         {/* Form */}
         <form
@@ -220,23 +210,11 @@ export default function RegisterPage() {
         </form>
 
         {/* Footer */}
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="
-                font-medium
-                text-black
-                underline-offset-4
-                transition
-                hover:underline
-              "
-            >
-              Login
-            </Link>
-          </p>
-        </div>
+        <AuthFooter
+          text="Already have an account?"
+          linkText="Login"
+          onClick={() => navigate("/login")}
+        />
       </div>
     </div>
   )
