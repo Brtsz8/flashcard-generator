@@ -7,19 +7,20 @@ import { googleLogin, loginUser } from "../services/authService"
 //import { useAuth } from "../store/AuthContext"
 import { useAuth } from "../hooks/useAuth"
 
+//components
+import AuthHeader from "../components/auth/AuthHeader"
+import AuthFooter from "../components/auth/AuthFooter";
+import LoginForm from "../components/auth/LoginForm";
+
 export default function LoginPage() {
     const navigate = useNavigate()
     const { login } = useAuth()
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [loading, setLoading] = useState(false)
-
-    const handleSubmit = async (
-        e: React.FormEvent<HTMLFormElement>
+    //this function will be passed into LoginForm component
+    const handleLogin = async (
+        email: string,
+        password: string
     ) => {
-        e.preventDefault()
-
         try {
             const data = await loginUser(
                 email,
@@ -32,7 +33,6 @@ export default function LoginPage() {
 
         } catch (err) {
             toast.error("Wrong email or password!")
-            console.error(err)
         }
     }
 
@@ -45,148 +45,53 @@ export default function LoginPage() {
                 p-10 shadow-sm"
             >
                 {/*Header*/}
-                <div className="mb-10">
-                    <h1 className="text-4xl font-bold tracking-tight text-black">
-                        Welcome back
-                    </h1>
-                    <p className="mt-3 text-sm text-gray-500">
-                        Log in to continue studying
-                    </p>
-                </div>
+                <AuthHeader
+                    title="Welcome back"
+                    subtitle="Log in to continue studying!"
+                />
                 {/*Form*/}
-                <form onSubmit={handleSubmit}
-                    className="flex flex-col gap-5"
-                >
-                     <div className="flex flex-col gap-2">
-                        <label
-                        htmlFor="email"
-                        className="text-sm font-medium text-gray-700"
-                        >
-                        Email
-                        </label>
+                <LoginForm onSubmit={handleLogin}/>
 
-                        <input
-                        id="email"
-                        type="email"
-                        placeholder="you@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="
-                            rounded-2xl
-                            border
-                            border-gray-300
-                            bg-white
-                            px-4
-                            py-3
-                            text-black
-                            outline-none
-                            transition
-                            placeholder:text-gray-400
-                            focus:border-black
-                        "
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label
-                        htmlFor="password"
-                        className="text-sm font-medium text-gray-700"
-                        >
-                        Password
-                        </label>
+                <div className="flex flex-col gap-2 py-2">
+                    {/*Google Auth*/}
+                    <GoogleLogin
 
-                        <input
-                        id="password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="
-                            rounded-2xl
-                            border
-                            border-gray-300
-                            bg-white
-                            px-4
-                            py-3
-                            text-black
-                            outline-none
-                            transition
-                            placeholder:text-gray-400
-                            focus:border-black
-                        "
-                        />
-                    </div>
+                        onSuccess={async (
+                            credentialResponse
+                        ) => {
+                            try {
+                                const data = await googleLogin(
+                                    credentialResponse.credential!)
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="
-                        mt-4
-                        rounded-2xl
-                        bg-black
-                        px-4
-                        py-3
-                        text-sm
-                        font-medium
-                        text-white
-                        transition
-                        hover:opacity-90
-                        disabled:cursor-not-allowed
-                        disabled:opacity-50
-                        "
-                    >
-                        {loading ? "Logging in..." : "Login"}
-                    </button>
-                </form> 
-                {/*Google Auth*/}
-                <GoogleLogin
+                                //localStorage.setItem("token", data.token)
+                                //this caused problems - state not updating fast enough, fix:
+                                await login(data.token)
 
-                    onSuccess={async (
-                        credentialResponse
-                    ) => {
-                        try {
-                            const data = await googleLogin(
-                                credentialResponse.credential!)
+                                toast.success("Logged in with Google")
+                                navigate("/dashboard")
+                            } catch (err) {
+                                toast.error("Google login failed")
+                            }
+                        }}
 
-                            //localStorage.setItem("token", data.token)
-                            //this caused problems - state not updating fast enough, fix:
-                            await login(data.token)
+                        onError={() => {
 
-                            toast.success("Logged in with Google")
-                            navigate("/dashboard")
-                        } catch (err) {
-                            toast.error("Google login failed")
-                        }
-                    }}
-
-                    onError={() => {
-
-                        toast.error(
-                            "Google login failed"
-                        );
-                    }}
-                /> 
-                {/*Facebook Auth*/}
-                
-                {/*Discord auth*/}
+                            toast.error(
+                                "Google login failed"
+                            );
+                        }}
+                    /> 
+                    {/*Facebook Auth*/}
+                    
+                    {/*Discord auth*/}
+                </div>
                 
                 {/* Footer */}
-                <div className="mt-8 text-center">
-                <p className="text-sm text-gray-500">
-                    Don’t have an account?{" "}
-                    <button
-                    onClick={() => navigate("/register")}
-                    className="
-                        font-medium
-                        text-black
-                        underline-offset-4
-                        transition
-                        hover:underline
-                    "
-                    >
-                    Sign up
-                    </button>
-                </p>
-                </div>              
+                <AuthFooter
+                    text="Don't have an account?"
+                    linkText="Sign up"
+                    onClick={() => navigate('/register')}
+                />
             </div>   
 
         </div>

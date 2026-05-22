@@ -1,23 +1,20 @@
 type Props = {
-    value: string
-
+    value: string,
     onChange: (
         value: string
     ) => void
 }
 
-export default function DeckSearch({
+export default function FlashcardSearch({
     value,
     onChange
-}: Props) {
+}: Props ){
     return (
         <input
             type="text"
-            placeholder="Search decks..."
+            placeholder="Search flashcards..."
             value={value}
-            onChange={(e) =>
-            onChange(e.target.value)
-            }
+            onChange={(e) => onChange(e.target.value)}
             className="
             mb-8
             w-full
