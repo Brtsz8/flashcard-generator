@@ -20,6 +20,8 @@ model User {
   providerId    String? @unique
   authProvider AuthProvider @default(LOCAL)
 
+  role Role @default(USER)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -31,6 +33,11 @@ enum AuthProvider {
   GOOGLE
   FACEBOOK
   GITHUB
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Deck {

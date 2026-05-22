@@ -28,7 +28,9 @@ function authMiddleware(req, res, next) {
             });
         }
 
-        req.userId = decoded.id;
+        //req.userId = decoded.id;
+        //changing it so req can now store user.id and user.role
+        req.user = decoded 
 
         next();
     });

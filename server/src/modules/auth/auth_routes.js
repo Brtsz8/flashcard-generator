@@ -15,12 +15,13 @@ router.get("/me", authMiddleware, async (req, res) => {
 
         const user = await prisma.user.findUnique({
             where: {
-                id: req.userId
+                id: req.user.id
             },
             select: {
                 id: true,
                 email: true,
                 username: true,
+                role: true,
                 createdAt: true
             }
         })
@@ -67,7 +68,10 @@ router.post('/register', async (req,res) => {
         })
 
         //sesion token
-        const token = jwt.sign({id: user.id }, process.env.JWT_SECRET, {expiresIn: '24h'})
+        const token = jwt.sign({
+            id: user.id,
+            role: user.role
+        }, process.env.JWT_SECRET, {expiresIn: '24h'})
 
         //sends token back
         res.status(201).json({ token })
@@ -94,7 +98,10 @@ router.post('/login', async (req,res) => {
         const passwordIsValid = bcrypt.compareSync(password, user.password)
         if(!passwordIsValid) {return res.status(401).send({ message : "INVALID PASSWORD"})}
 
-        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '24h'})
+        const token = jwt.sign({
+            id: user.id,
+            role: user.role
+        }, process.env.JWT_SECRET, {expiresIn: '24h'})
         return res.json({ token })
 
     } catch (err) {
@@ -135,7 +142,7 @@ router.put('/update',  async (req,res) => {
 
         //updating if needed
         const updatedUser = await prisma.user.update({
-            where: { id: req.userId },
+            where: { id: req.user.id },
             data: dataUpdate
         })
 
@@ -150,7 +157,7 @@ router.delete('/delete', async (req,res) => {
     try {
         await prisma.user.delete({
             where: {
-                id: req.userId
+                id: req.user.id
             }
         })
 
@@ -217,7 +224,10 @@ router.post("/google", async (req,res) => {
         }
 
         //return our token (not googles)
-        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '24h'})
+        const token = jwt.sign({
+            id: user.id,
+            role: user.role
+        }, process.env.JWT_SECRET, {expiresIn: '24h'})
         res.json({token})
     }catch (err){
         console.error(err)

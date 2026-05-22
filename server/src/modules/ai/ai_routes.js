@@ -37,7 +37,7 @@ router.post('/generate', authMiddleware, async (req,res) => {
             })
         }
 
-        if(deck.userId !== req.userId){
+        if(deck.userId !== req.user.id){
             return res.status(403).json({
                 message: "Unauthorized"
             })
@@ -69,7 +69,6 @@ router.post('/generate', authMiddleware, async (req,res) => {
                 responseSchema: zodToJsonSchema(flashcardsSchema)
             }
         })
-        //console.log(response.text)
         const flashcards = 
             flashcardsSchema.parse(JSON.parse(response.text))
         
