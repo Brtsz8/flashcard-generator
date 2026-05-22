@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
 
 import { useAuth } from "../hooks/useAuth"
 import { getDecks, createDeck } from "../services/deckService"
@@ -17,7 +16,6 @@ interface Deck {
 }
 
 export default function DashboardPage() {
-    const navigate = useNavigate()
     const { user } = useAuth()
 
     const [decks, setDecks] = useState<Deck[]>([])

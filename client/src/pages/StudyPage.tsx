@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 import { getFlashcards } from "../services/flashcardService";
 import MainLayout from "../layouts/MainLayout";
+import StudyHeader from "../components/study/StudyHeader";
 
 interface Flashcard {
     id: string
@@ -91,28 +92,7 @@ export default function StudyPage() {
         <div className="mx-auto flex min-h-[80vh] max-w-3xl flex-col px-6 py-12">
         
         {/* Header */}
-        <div className="mb-10">
-            <h1 className="text-4xl font-bold tracking-tight text-black">
-            Study Mode
-            </h1>
-
-            <div className="mt-4 flex items-center justify-between">
-            <p className="text-sm text-gray-500">
-                Card {currentIndex + 1} of {flashcards.length}
-            </p>
-
-            <div className="h-2 w-40 overflow-hidden rounded-full bg-gray-200">
-                <div
-                className="h-full bg-black transition-all duration-300"
-                style={{
-                    width: `${
-                    ((currentIndex + 1) / flashcards.length) * 100
-                    }%`,
-                }}
-                />
-            </div>
-            </div>
-        </div>
+        <StudyHeader currentIndex={currentIndex} length={flashcards.length}/>
 
         {/* Flashcard */}
         <div
