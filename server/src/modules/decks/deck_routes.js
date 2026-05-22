@@ -12,7 +12,7 @@ router.post('/', authMiddleware, async (req, res) => {
             data: {
                 title,
                 description,
-                userId: req.userId
+                userId: req.user.id
             }
         })
         res.status(201).json(deck)

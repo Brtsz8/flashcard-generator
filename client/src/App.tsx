@@ -11,6 +11,8 @@ import DashboardPage from "./pages/DashboardPage"
 import DeckPage from "./pages/DeckPage"
 import StudyPage from "./pages/StudyPage"
 import RegisterPage from "./pages/RegisterPage"
+import AdminRoute from "./components/auth/AdminRoute"
+import AdminPage from "./pages/AdminPage"
 
 function App() {
   return (
@@ -48,6 +50,14 @@ function App() {
               <StudyPage/>
             </ProtectedRoute>
           }
+        />
+        <Route
+            path="/admin"
+            element={
+                <AdminRoute>
+                    <AdminPage />
+                </AdminRoute>
+            }
         />
       </Routes>
     </BrowserRouter>

@@ -1,8 +1,10 @@
 import toast from "react-hot-toast"
 import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../../hooks/useAuth"
 
 export default function Navbar() {
     const navigate = useNavigate()
+    const { user } = useAuth()
 
     const handleLogout = () => {
         localStorage.removeItem("token")
@@ -51,6 +53,19 @@ export default function Navbar() {
                     >
                         Dashboard
                     </Link>
+                    {
+                        user?.role === "ADMIN"
+                        && (
+
+                            <button
+                                onClick={() =>
+                                    navigate("/admin")
+                                }
+                            >
+                                Admin
+                            </button>
+                        )
+                    }
 
                     <button
                         onClick={handleLogout}

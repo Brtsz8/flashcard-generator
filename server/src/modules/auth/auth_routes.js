@@ -21,6 +21,7 @@ router.get("/me", authMiddleware, async (req, res) => {
                 id: true,
                 email: true,
                 username: true,
+                role: true,
                 createdAt: true
             }
         })

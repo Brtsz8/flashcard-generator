@@ -88,13 +88,13 @@ router.get('/:deckId', authMiddleware, async (req,res) => {
 
 router.delete("/:id",authMiddleware, async (req,res) => {
     const {id} = req.params
-
-    try {
+    try { 
+        
         const flashcard = await prisma.flashcard.findUnique({
             where : { id },
             include : {deck: true}  //prisma doesnt include relations if we dont specify it
         })
-
+        
         if(!flashcard) {
             return res.status(404).json({
                 message: "Flashcard not found"
@@ -111,6 +111,7 @@ router.delete("/:id",authMiddleware, async (req,res) => {
         await prisma.flashcard.delete({
             where: {id}
         })
+
 
         res.status(200).json({
             message: "Flashcard deleted"
