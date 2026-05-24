@@ -48,3 +48,13 @@ export const googleLogin = async (
 
     return response.data
 }
+
+export const facebookLogin = async (
+    accessToken: string
+) => {
+    const response = await api.post(
+        "/auth/facebook",
+        {accessToken}
+    )
+    return response.data
+}

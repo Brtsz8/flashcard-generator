@@ -2,8 +2,9 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { GoogleLogin } from "@react-oauth/google";
+import {Login, type LoginResponse} from 'react-facebook'
 
-import { googleLogin, loginUser } from "../services/authService"
+import { googleLogin, loginUser, facebookLogin } from "../services/authService"
 //import { useAuth } from "../store/AuthContext"
 import { useAuth } from "../hooks/useAuth"
 
@@ -82,6 +83,27 @@ export default function LoginPage() {
                         }}
                     /> 
                     {/*Facebook Auth*/}
+                    <Login
+                        scope="email,public_profile"
+                        onSuccess={async (response: LoginResponse) => {
+                            try {
+                                const data = await facebookLogin(response.authResponse.accessToken)
+                                console.log('data: ', data)
+                                await login(data.token)
+                                toast.success("Logged in with Facebook")
+                                navigate("/dashboard")
+                            } catch {
+                                toast.error("Facebook login failed")
+                            }
+                            finally {
+                                console.log("response: ", response)
+                            }
+                        }}
+                        onError={() => toast.error("Facebook login failed")}
+                    >
+                        Continue with Facebook
+
+                    </Login>
                     
                     {/*Discord auth*/}
                 </div>

@@ -24,6 +24,9 @@ Thumbs.db
 # vscode
 .vscode
 
+#idea
+.idea/
+
 # docker
 docker-data
 
