@@ -13,6 +13,8 @@ import AuthHeader from "../components/auth/AuthHeader"
 import { useAuth } from "../hooks/useAuth"
 import RegisterForm from "../components/auth/RegisterForm"
 
+import { FaGithub } from "react-icons/fa"
+
 export default function RegisterPage() {
   const navigate = useNavigate()
 
@@ -40,6 +42,24 @@ export default function RegisterPage() {
       toast.error("Register failed")
       console.error(err)
     }
+  }
+
+  const handleGithubLogin = () => {
+      const clientId =
+          import.meta.env.VITE_GITHUB_CLIENT_ID
+
+      const redirectUri =
+          "http://localhost:5173/auth/github/callback"
+
+      const scope =
+          "read:user user:email"
+
+      window.location.href =
+          `https://github.com/login/oauth/authorize` +
+          `?client_id=${clientId}` +
+          `&redirect_uri=${redirectUri}` +
+          `&scope=${scope}` +
+          `&prompt=login`
   }
 
   return (
@@ -94,7 +114,35 @@ export default function RegisterPage() {
             /> 
             {/*Facebook Auth*/}
             
-            {/*Discord auth*/}
+            {/*GitHub auth*/}
+            <button
+                onClick={handleGithubLogin}
+                className="
+                    mt-2
+                    flex
+                    h-10
+                    w-full
+                    items-center
+                    rounded
+                    border
+                    border-[#d1d5db]
+                    bg-white
+                    px-4
+                    text-sm
+                    font-medium
+                    text-[#3c4043]
+                    hover:bg-[#f8f9fa]
+                "
+            >
+                <div className="w-6">
+                    <FaGithub className="text-[18px]" />
+                </div>
+
+                <div className="flex-1 text-center">
+                    Zaloguj się przez GitHub
+                </div>
+            </button>
+            
         </div>
 
         {/* Footer */}
