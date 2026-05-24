@@ -4,7 +4,7 @@ import toast from "react-hot-toast"
 import { GoogleLogin } from "@react-oauth/google";
 import { FaGithub } from "react-icons/fa"
 
-import { googleLogin, loginUser } from "../services/authService"
+import { googleLogin, loginUser, facebookLogin } from "../services/authService"
 //import { useAuth } from "../store/AuthContext"
 import { useAuth } from "../hooks/useAuth"
 
@@ -96,7 +96,54 @@ export default function LoginPage() {
                         }}
                     /> 
                     {/*Facebook Auth*/}
-                    
+                    <Login
+                        scope="email,public_profile"
+                        onSuccess={async (response: LoginResponse) => {
+                            try {
+                                const data = await facebookLogin(response.authResponse.accessToken)
+                                console.log('data: ', data)
+                                await login(data.token)
+                                toast.success("Logged in with Facebook")
+                                navigate("/dashboard")
+                            } catch {
+                                toast.error("Facebook login failed")
+                            }
+                            finally {
+                                console.log("response: ", response)
+                            }
+                        }}
+                        onError={() => toast.error("Facebook login failed")}
+                        className="
+                            relative
+                            flex
+                            w-full
+                            items-center
+                            justify-center
+                            gap-2
+                            rounded-md
+                            bg-[#1877F2]
+                            px-4
+                            py-3
+                            text-sm
+                            font-medium
+                            text-white
+                            transition
+                            hover:bg-[#166FE5]
+                            disabled:cursor-not-allowed
+                            disabled:opacity-50
+                        "
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="absolute left-3 h-5 w-5"
+                            aria-hidden="true"
+                        >
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                        Continue with Facebook
+                    </Login>
+
                     {/*GitHub auth*/}
                     <button
                         onClick={handleGithubLogin}
@@ -125,7 +172,7 @@ export default function LoginPage() {
                             Zaloguj się przez GitHub
                         </div>
                     </button>
-                    
+
                 </div>
                 
                 {/* Footer */}

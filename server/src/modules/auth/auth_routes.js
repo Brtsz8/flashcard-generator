@@ -239,14 +239,88 @@ router.post("/google", async (req,res) => {
 })
 
 router.post("/facebook", async (req,res) => {
-    
+    const {accessToken} = req.body
     try{
-        //todo
+        // with this metod you can make calls to Graph API without using a generated app access token
+        const appToken = `${process.env.FACEBOOK_CLIENT_ID}|${process.env.FACEBOOK_APP_SECRET}`
+
+        // verify login
+        const debugRes = await fetch(
+            `https://graph.facebook.com/debug_token?input_token=${accessToken}&access_token=${appToken}`
+        )
+        const debugData = await debugRes.json()
+
+        if (!debugData.data || !debugData.data.is_valid ||
+            debugData.data.app_id !== process.env.FACEBOOK_CLIENT_ID) {
+            return res.status(401).json({ message: "Invalid Facebook token" })
+        }
+
+        // download user data from graph api
+        const profileRes = await fetch(
+            `https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${accessToken}`
+        )
+        const profile = await profileRes.json()
+
+        const { id, name, email } = profile
+        const picture = profile.picture?.data?.url
+
+        // Facebook nie zawsze zwraca email (user mógł nie zgodzić się / brak weryfikacji)
+        // Facebook does not always return user email (user might have not consented / auth error)
+        if (!email) {
+            return res.status(400).json({ message: "Facebook account has no email" })
+        }
+
+        //look for user
+        //using findFist insted of findUnique because findUNique doesn't support OR operator
+        let user = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    { providerId: id }, //existing google account
+                    { email }           //or existing local acoount with same email
+                ]
+            }
+        })
+
+        //if user exists localy
+        //but google account is not linked
+        if (user && !user.providerId ) {
+            user = await prisma.user.update({
+                where: {
+                    id: user.id
+                },
+                data: {
+                    authProvider: "FACEBOOK",
+                    providerId: id,
+                    avatar: picture
+                }
+            })
+        }
+        //create user if needed, via facebook
+        if(!user){
+            user = await prisma.user.create({
+                data: {
+                    email,
+                    username: name,
+                    avatar: picture,
+                    authProvider: "FACEBOOK",
+                    providerId: id
+                }
+            })
+        }
+
+        //return our token (not facebook's)
+        const token = jwt.sign({
+            id: user.id,
+            role: user.role
+        }, process.env.JWT_SECRET, {expiresIn: '24h'})
+        res.json({token})
+
+
     }
     catch (err){
         console.error(err)
         res.status(500).json({
-            message: "Google Auth Failed"
+            message: "Facebook Auth Failed"
         })
     }
 
