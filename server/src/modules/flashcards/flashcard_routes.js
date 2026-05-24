@@ -22,7 +22,7 @@ router.post('/', authMiddleware, async (req, res) => {
         }
 
         //check if user is authorized to modify this deck
-        if(req.userId !== deck.userId)
+        if(req.user.id !== deck.userId)
         {
             res.status(403).json({
                 message: "Unathorized"
@@ -63,7 +63,7 @@ router.get('/:deckId', authMiddleware, async (req,res) => {
             })
         }
         //check if user is authorized to acces this deck
-        if(req.userId !== deck.userId)
+        if(req.user.id !== deck.userId)
         {
             res.status(403).json({
                 message: "Unathorized"
@@ -76,7 +76,6 @@ router.get('/:deckId', authMiddleware, async (req,res) => {
             }
         })
 
-        //console.log(flashcards)
 
         //send flashcards for this deck
         res.status(201).json(flashcards)
@@ -89,13 +88,13 @@ router.get('/:deckId', authMiddleware, async (req,res) => {
 
 router.delete("/:id",authMiddleware, async (req,res) => {
     const {id} = req.params
-
-    try {
+    try { 
+        
         const flashcard = await prisma.flashcard.findUnique({
             where : { id },
             include : {deck: true}  //prisma doesnt include relations if we dont specify it
         })
-
+        
         if(!flashcard) {
             return res.status(404).json({
                 message: "Flashcard not found"
@@ -103,7 +102,7 @@ router.delete("/:id",authMiddleware, async (req,res) => {
         }
 
         //chech if user is authorized to delete this flashcard
-        if(req.userId !== flashcard.deck.userId) {
+        if(req.user.id !== flashcard.deck.userId) {
             return res.status(403).json({
                 messege: "User can't delete this flashcard (Unauthorized)"
             })
@@ -112,6 +111,7 @@ router.delete("/:id",authMiddleware, async (req,res) => {
         await prisma.flashcard.delete({
             where: {id}
         })
+
 
         res.status(200).json({
             message: "Flashcard deleted"
@@ -141,7 +141,7 @@ router.put("/:id",authMiddleware, async (req,res) => {
         }
 
         //chech if user is authorized to delete this flashcard
-        if(req.userId !== flashcard.deck.userId) {
+        if(req.user.id !== flashcard.deck.userId) {
             return res.status(403).json({
                 messege: "User can't delete this flashcard (Unauthorized)"
             })

@@ -7,13 +7,12 @@ const router = express.Router()
 router.post('/', authMiddleware, async (req, res) => {
     //body contains only title and description for now
     const {title, description} = req.body
-    //console.log(req.body)
     try {
         const deck = await prisma.deck.create({
             data: {
                 title,
                 description,
-                userId: req.userId
+                userId: req.user.id
             }
         })
         res.status(201).json(deck)
@@ -29,7 +28,7 @@ router.get('/', authMiddleware, async (req,res) => {
     try {
         const userDecks = await prisma.deck.findMany({
             where: {
-                userId: req.userId
+                userId: req.user.id
             }
         })
 

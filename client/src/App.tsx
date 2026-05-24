@@ -12,6 +12,8 @@ import DeckPage from "./pages/DeckPage"
 import StudyPage from "./pages/StudyPage"
 import RegisterPage from "./pages/RegisterPage"
 import GithubCallbackPage from "./pages/GithubCallbackPage"
+import AdminRoute from "./components/auth/AdminRoute"
+import AdminPage from "./pages/AdminPage"
 
 function App() {
   return (
@@ -54,6 +56,16 @@ function App() {
           path="/auth/github/callback"
           element={<GithubCallbackPage/>}
         />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminPage />
+            </AdminRoute>
+          }
+        />
+        
       </Routes>
     </BrowserRouter>
   )
