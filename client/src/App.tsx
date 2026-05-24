@@ -11,6 +11,7 @@ import DashboardPage from "./pages/DashboardPage"
 import DeckPage from "./pages/DeckPage"
 import StudyPage from "./pages/StudyPage"
 import RegisterPage from "./pages/RegisterPage"
+import GithubCallbackPage from "./pages/GithubCallbackPage"
 
 function App() {
   return (
@@ -48,6 +49,10 @@ function App() {
               <StudyPage/>
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/auth/github/callback"
+          element={<GithubCallbackPage/>}
         />
       </Routes>
     </BrowserRouter>

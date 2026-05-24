@@ -5,6 +5,7 @@ const prisma = require('../../config/db.js')
 const authMiddleware = require('./auth_middleware.js')
 //google OAuth2
 const { OAuth2Client } = require("google-auth-library")
+const axios = require("axios")
 
 const router = express.Router()
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
@@ -244,12 +245,108 @@ router.post("/facebook", async (req,res) => {
 router.post("/github", async (req,res) => {
     
     try{
-        //todo
+        const { code } = req.body
+
+        const tokenResponse = await axios.post(
+            "https://github.com/login/oauth/access_token",
+            {
+                client_id:
+                    process.env.GITHUB_CLIENT_ID,
+
+                client_secret:
+                    process.env.GITHUB_CLIENT_SECRET,
+
+                code
+            },
+            {
+                headers: {
+                    Accept: "application/json"
+                }
+            }
+        )
+
+        const accessToken = tokenResponse.data.access_token
+
+        const githubUserResponse =
+            await axios.get(
+                "https://api.github.com/user",
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${accessToken}`
+                    }
+                }
+            )
+
+        const githubUser = githubUserResponse.data
+
+        const emailResponse =
+            await axios.get(
+                "https://api.github.com/user/emails",
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${accessToken}`
+                    }
+                }
+            )
+
+        const primaryEmail =
+            emailResponse.data.find(
+                (email) =>
+                    email.primary === true
+            )
+
+        if(!primaryEmail) {
+            return res.status(400).json({
+                message:
+                    "No primary email found"
+            })
+        }
+
+        let user = await prisma.user.findUnique({
+            where: {
+                email: primaryEmail.email
+            }
+        })
+
+        if(!user) {
+            user = await prisma.user.create({
+                data: {
+                    email:
+                        primaryEmail.email,
+
+                    username:
+                        githubUser.login,
+
+                    authProvider:
+                        "GITHUB",
+
+                    providerId:
+                        githubUser.id.toString()
+                }
+            })
+        }
+
+        const token = jwt.sign(
+            {
+                id: user.id
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "7d"
+            }
+        )
+
+        res.json({
+            token
+        })
+
     }
     catch (err){
         console.error(err)
         res.status(500).json({
-            message: "Google Auth Failed"
+            message: "Github Auth Failed"
         })
     }
 

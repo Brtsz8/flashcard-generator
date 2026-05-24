@@ -48,3 +48,14 @@ export const googleLogin = async (
 
     return response.data
 }
+
+export const githubLogin = async (
+    code: string
+) => {
+    const response = await api.post(
+        "/auth/github",
+        { code }
+    )
+
+    return response.data
+}
