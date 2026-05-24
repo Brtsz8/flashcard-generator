@@ -1,7 +1,7 @@
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { GoogleLogin } from "@react-oauth/google";
+import { Login, type LoginResponse } from "react-facebook"
 import { FaGithub } from "react-icons/fa"
 
 import { googleLogin, loginUser, facebookLogin } from "../services/authService"

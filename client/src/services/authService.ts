@@ -49,7 +49,6 @@ export const googleLogin = async (
     return response.data
 }
 
-<<<<<<< HEAD
 export const githubLogin = async (
     code: string
 ) => {
@@ -58,7 +57,9 @@ export const githubLogin = async (
         { code }
     )
 
-=======
+    return response.data
+}
+
 export const facebookLogin = async (
     accessToken: string
 ) => {
@@ -66,6 +67,5 @@ export const facebookLogin = async (
         "/auth/facebook",
         {accessToken}
     )
->>>>>>> feat/facebook-auth
     return response.data
 }
