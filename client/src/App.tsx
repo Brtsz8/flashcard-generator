@@ -14,12 +14,17 @@ import RegisterPage from "./pages/RegisterPage"
 import GithubCallbackPage from "./pages/GithubCallbackPage"
 import AdminRoute from "./components/auth/AdminRoute"
 import AdminPage from "./pages/AdminPage"
+import HomePage from "./pages/HomePage"
 
 function App() {
   return (
     <BrowserRouter>
       <Toaster/>
       <Routes>
+        <Route
+          path="/"
+          element={<HomePage/>}
+        />
         <Route
           path="/login"
           element={<LoginPage/>}

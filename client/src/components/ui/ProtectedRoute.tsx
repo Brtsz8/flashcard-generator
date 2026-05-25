@@ -1,5 +1,5 @@
-import { Navigate } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
+import ForbiddenPage from "../../pages/ForbiddenPage"
 
 export default function ProtectedRoute({
     children
@@ -13,7 +13,7 @@ export default function ProtectedRoute({
     }
 
     if(!user) {
-        return <Navigate to="/login"/>
+        return <ForbiddenPage />
     }
 
     return children

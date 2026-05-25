@@ -30,7 +30,7 @@ export default function Navbar() {
                 "
             >
                 <Link
-                    to="/dashboard"
+                    to={user ? "/dashboard" : "/"}
                     className="
                         text-xl
                         font-bold
@@ -45,45 +45,69 @@ export default function Navbar() {
                         items-center
                     "
                 >
-                    <Link
-                        to="/dashboard"
-                        className="
-                            text-sm
-                        "
-                    >
-                        Dashboard
-                    </Link>
-                    {
-                        user?.role === "ADMIN"
-                        && (
-
-                            <button
-                                onClick={() =>
-                                    navigate("/admin")
-                                }
+                    {user ? (
+                        <>
+                            <Link
+                                to="/dashboard"
+                                className="
+                                    text-sm
+                                "
                             >
-                                Admin
+                                Dashboard
+                            </Link>
+                            {
+                                user?.role === "ADMIN"
+                                && (
+                                    <button
+                                        onClick={() =>
+                                            navigate("/admin")
+                                        }
+                                    >
+                                        Admin
+                                    </button>
+                                )
+                            }
+                            <button
+                                onClick={handleLogout}
+                                className="
+                                    bg-black
+                                    text-white
+                                    px-4
+                                    py-2
+                                    rounded-lg
+                                "
+                            >
+                                Logout
                             </button>
-                        )
-                    }
-
-                    <button
-                        onClick={handleLogout}
-                        className="
-                            bg-black
-                            text-white
-                            px-4
-                            py-2
-                            rounded-lg
-                        "
-                    >
-                        Logout
-                    </button>
-
+                        </>
+                    ) : (
+                        <>
+                            <Link
+                                to="/login"
+                                className="
+                                    text-sm font-medium hover:text-gray-600
+                                "
+                            >
+                                Login
+                            </Link>
+                            <Link
+                                to="/register"
+                                className="
+                                    bg-black
+                                    text-white
+                                    px-4
+                                    py-2
+                                    rounded-lg
+                                    text-sm
+                                    font-medium
+                                "
+                            >
+                                Register
+                            </Link>
+                        </>
+                    )}
                 </div>
-
             </div>
-
         </nav>
     )
 }

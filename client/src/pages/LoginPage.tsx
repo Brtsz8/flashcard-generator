@@ -31,7 +31,7 @@ export default function LoginPage() {
             await login(data.token)
             toast.success("Logged In")
             navigate("/dashboard")
-
+ 
         } catch (err) {
             toast.error("Wrong email or password!")
         }
@@ -48,6 +48,7 @@ export default function LoginPage() {
             `&redirect_uri=${redirectUri}` +
             `&scope=${scope}` +
             `&prompt=login`
+
     }
 
     return(

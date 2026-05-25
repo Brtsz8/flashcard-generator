@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 import { githubLogin } from "../services/authService"
 import { useAuth } from "../hooks/useAuth"
@@ -27,6 +28,8 @@ export default function GithubCallbackPage() {
 
                 await login(data.token)
 
+
+                toast.success("Logged in with GitHub")
                 navigate("/dashboard")
 
             } catch(err) {
