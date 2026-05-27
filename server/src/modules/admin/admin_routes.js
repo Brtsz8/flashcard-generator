@@ -25,6 +25,11 @@ router.get("/users", async (req, res) => {
 router.delete("/users/:id", async (req, res) => {
 
     const { id } = req.params
+    
+    //deleting decks first 
+    await prisma.deck.deleteMany({
+        where: { userId: id }
+    })
 
     await prisma.user.delete({
         where: { id }
